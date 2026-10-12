@@ -178,14 +178,34 @@ const Movimientos = () => {
     const rawQuery = searchQuery.trim().toLowerCase();
     const queryStr = rawQuery.replace(/\s*\((desactivado|inactivo)\)/i, '').trim();
     
-    // Buscar coincidencia en insumos (incluyendo desactivados para mostrar advertencia)
-    const match = (insumos || []).find(i => {
-      const formatted = `[${i.codigo}] ${i.nombre}`.toLowerCase();
+    // 1. Detección prioritaria si el usuario seleccionó del datalist: [CODIGO] Nombre...
+    const bracketMatch = queryStr.match(/^\[([^\]]+)\]/);
+    if (bracketMatch) {
+      const extractedCode = bracketMatch[1].trim().toLowerCase();
+      const matchByCode = (insumos || []).find(i => String(i.codigo).toLowerCase() === extractedCode);
+      if (matchByCode) {
+        if (matchByCode.codigo !== form.codigo_insumo) {
+          handleInsumoChange(matchByCode.codigo, matchByCode.nombre);
+        }
+        return;
+      }
+    }
+
+    // 2. Coincidencia exacta por código, nombre completo o texto formateado
+    let match = (insumos || []).find(i => {
       const codeStr = String(i.codigo).toLowerCase();
       const nameStr = (i.nombre || '').toLowerCase();
-      
-      return formatted === queryStr || codeStr === queryStr || nameStr === queryStr || queryStr.includes(formatted) || queryStr.includes(codeStr);
+      const formatted = `[${codeStr}] ${nameStr}`;
+      return codeStr === queryStr || formatted === queryStr || nameStr === queryStr;
     });
+
+    // 3. Coincidencia si el nombre del insumo contiene el texto buscado
+    if (!match && queryStr.length >= 2) {
+      match = (insumos || []).find(i => {
+        const nameStr = (i.nombre || '').toLowerCase();
+        return nameStr.includes(queryStr);
+      });
+    }
 
     if (match && match.codigo !== form.codigo_insumo) {
        handleInsumoChange(match.codigo, match.nombre);
