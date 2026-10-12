@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Helpers de Autenticación Defensiva
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function userExists() {
+      return isSignedIn() && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+    
+    // El Super Admin (josuemoralessaj@gmail.com) es inmutable e independiente
+    function isSuperAdmin() {
+      return isSignedIn() && request.auth.token.email == 'josuemoralessaj@gmail.com';
+    }
+
+    function isSupervisor() {
+      return isSuperAdmin() || (
+        userExists() && (
+          getUserData().rol == 'Supervisor de enfermería' || 
+          getUserData().rol == 'Administrador'
+        )
+      );
+    }
+
+    function isEncargado() {
+      return isSupervisor() || (
+        userExists() && getUserData().rol == 'Encargado de servicio'
+      );
+    }
+
+    // -------------------------------------------------------------
+    // REGLAS POR COLECCIÓN
+    // -------------------------------------------------------------
+
+    // Usuarios: Nadie puede asignar 'Administrador' ni modificar la cuenta del Super Admin salvo él mismo.
+    match /usuarios/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSupervisor() && (
+        request.resource.data.rol != 'Administrador' || isSuperAdmin()
+      );
+      allow update: if isSupervisor() && (
+        (request.resource.data.rol != 'Administrador' && (resource == null || resource.data.email != 'josuemoralessaj@gmail.com')) || isSuperAdmin()
+      );
+      allow delete: if isSuperAdmin();
+    }
+
+    // Insumos y Lotes: Operaciones del catálogo y stock
+    match /insumos/{insumoId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+    
+    match /lotes/{loteId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Movimientos: Los usuarios autenticados leen, crean, editan y eliminan (reversiones)
+    match /movimientos/{movId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Auditoría: Inmutable para usuarios generales. Solo el Super Admin puede depurar o corregir logs
+    match /auditoria/{logId} {
+      allow read: if isSupervisor();
+      allow create: if isSignedIn();
+      allow update, delete: if isSuperAdmin();
+    }
+
+    // Metadatos, Categorías Dinámicas y Encabezados Institucionales
+    match /metadata/{metaId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /configuracion_categorias/{areaId} {
+      allow read: if isSignedIn();
+      allow write: if isEncargado();
+    }
+
+    match /configuracion_encabezados/{areaId} {
+      allow read: if isSignedIn();
+      allow write: if isEncargado();
+    }
+
+    // Conciliaciones: Actas oficiales de toma física
+    match /conciliaciones/{conciliacionId} {
+      allow read, write: if isSignedIn();
+    }
+  }
+}

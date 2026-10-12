@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "control-medica",
+    "staging": "control-medica-staging"
+  },
+  "targets": {},
+  "etags": {}
+}

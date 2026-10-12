@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+/* 
+  Estilos Globales - Control Médica 
+  Sistema Modernizado a Tailwind CSS v4
+*/
+
+@theme {
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #1a56db;
+  --color-primary-700: #1e429f;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-primary-950: #172554;
+  
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+
+  --color-accent: #7c3aed;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Definición de Sombras Elite para Tailwind 4 */
+  --shadow-luxury: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 20px 25px -5px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+:root {
+  /* Variables para uso manual si fuera necesario */
+  --primary-600: #1a56db;
+  --primary-700: #1e429f;
+  --font-display: 'Outfit';
+  --font-data: 'Plus Jakarta Sans';
+}
+
+@layer base {
+  body {
+    @apply antialiased text-slate-900 bg-[#f8fafc];
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Animaciones de Revelado Premium */
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-reveal {
+  animation: revealUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+
+/* Efectos Premium y Glassmorphism */
+.glass-sidebar {
+  @apply bg-gradient-to-b from-slate-950 via-primary-950/90 to-slate-950 backdrop-blur-xl border-r border-primary-900/25;
+}
+
+.glass-header {
+  @apply bg-white/60 backdrop-blur-lg border-b border-white/40 sticky top-0 z-50;
+}
+
+/* Cristalería de Lujo */
+.glass-card {
+  @apply bg-white/80 backdrop-blur-2xl border border-white/60 shadow-luxury;
+}
+
+.glass-card-dark {
+  @apply bg-slate-900/90 backdrop-blur-2xl border border-slate-800 shadow-2xl;
+}
+
+/* Utilidades de Tipografía */
+.font-data {
+  font-family: var(--font-data);
+}
+
+/* Scrollbar Estilizada */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-primary-300 transition-colors;
+}
+
+/* Transiciones Globales */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* 🎨 Estilos Cohesivos para Modales de SweetAlert2 */
+.swal2-popup {
+  border-radius: 1.5rem !important; /* rounded-2xl */
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif !important;
+  padding: 1.75rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.swal2-title {
+  font-weight: 700 !important;
+  color: #0f172a !important; /* slate-900 */
+  font-size: 1.4rem !important; /* Aumentado +2pt para excelente legibilidad */
+  letter-spacing: -0.01em !important;
+}
+
+.swal2-html-container {
+  color: #475569 !important; /* slate-600 */
+  font-size: 1rem !important; /* Aumentado +1.5pt para legibilidad */
+  font-weight: 500 !important;
+}
+
+.swal2-styled.swal2-confirm {
+  background-color: #1a56db !important; /* primary-600 */
+  border-radius: 0.75rem !important; /* rounded-xl */
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  padding: 0.65rem 1.35rem !important;
+  box-shadow: 0 4px 6px -1px rgba(26, 86, 219, 0.25) !important;
+  letter-spacing: normal !important;
+  text-transform: none !important; /* Quitar ALL CAPS */
+}
+
+.swal2-styled.swal2-confirm:hover {
+  background-color: #1e429f !important;
+}
+
+.swal2-styled.swal2-cancel {
+  background-color: #64748b !important; /* slate-500 */
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  padding: 0.65rem 1.35rem !important;
+  letter-spacing: normal !important;
+  text-transform: none !important; /* Quitar ALL CAPS */
+}
+
+.swal2-styled.swal2-cancel:hover {
+  background-color: #475569 !important;
+}

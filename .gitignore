@@ -1,0 +1,38 @@
+# Environment & Sensitive variables
+.env
+.env.*
+!.env.example
+*service-account*.json
+*private-key*.json
+leaks.txt
+firebase_cache.json
+
+# Node & Frontend
+**/node_modules/
+**/dist/
+**/dev-dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Excel & Internal data
+*.xlsx
+*.xls
+*.csv
+
+# Firebase Local cache
+.firebase/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.sw?
+
+# Temporary / Scratch
+scratch/
+artifacts/
+tmp/
+temp/
+*.zip
